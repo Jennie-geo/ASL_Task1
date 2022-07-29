@@ -1,0 +1,20 @@
+import { Injectable } from '@nestjs/common';
+//import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { EditUserDto } from './dto';
+
+@Injectable()
+export class UserService {
+  constructor(private prisma: PrismaService) {}
+
+  async editUser(userId: number, userDetails: EditUserDto) {
+    const user = await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: { ...userDetails },
+    });
+    delete user.hash_password;
+    return user;
+  }
+}
